@@ -6,6 +6,9 @@ import "antd/dist/antd.css";
 
 import styles from "./App.module.css";
 import Head from "./ui/Head";
+import Leftside from "./ui/Leftside";
+import Rightside from "./ui/Rightside";
+import Main from "./ui/Main";
 
 const { Header, Footer, Sider, Content } = Layout;
 
@@ -16,11 +19,19 @@ function App() {
         <Head />
       </Header>
       <Layout>
-        <Sider>left sidebar</Sider>
-        <Content>main content</Content>
-        <Sider>right sidebar</Sider>
+        <Sider>
+          <Leftside />
+        </Sider>
+        <Content>
+          <Main />
+        </Content>
+        <Sider>
+          <Rightside />
+        </Sider>
       </Layout>
-      <Footer>footer</Footer>
+      <Footer>
+        <Footer />
+      </Footer>
     </Layout>
   );
 }
