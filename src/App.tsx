@@ -19,13 +19,13 @@ function App() {
         <Head />
       </Header>
       <Layout>
-        <Sider>
+        <Sider className={styles.leftside} width={300}>
           <Leftside />
         </Sider>
         <Content>
           <Main />
         </Content>
-        <Sider>
+        <Sider className={styles.rightside} width={300}>
           <Rightside />
         </Sider>
       </Layout>

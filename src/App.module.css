@@ -7,3 +7,8 @@
   width: 100vw;
   height: 120px;
 }
+
+.leftside,
+.rightside {
+  background-color: white;
+}
