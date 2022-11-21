@@ -1,4 +1,6 @@
-import React, { useCallback } from "react";
+import React, { MouseEvent, useCallback } from "react";
+
+import { initialData } from "../reducer/FlowReducer";
 
 import ReactFlow, {
   MiniMap,
@@ -7,36 +9,34 @@ import ReactFlow, {
   useNodesState,
   useEdgesState,
   addEdge,
+  Connection,
+  Edge,
+  Node,
+  HandleType,
 } from "reactflow";
 
 import "reactflow/dist/style.css";
 
-const initialNodes = [
-  {
-    id: "1",
-    data: { label: "Hello" },
-    position: { x: 0, y: 0 },
-    type: "input",
-  },
-  {
-    id: "2",
-    data: { label: "World" },
-    position: { x: 100, y: 100 },
-  },
-];
-
-const initialEdges = [
-  { id: "1-2", source: "1", target: "2", label: "to the", type: "step" },
-];
-
 const Main = () => {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialData.nodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialData.edges);
 
   const onConnect = useCallback(
-    (params: any) => setEdges((eds) => addEdge(params, eds)),
+    (params: Edge<any> | Connection) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
   );
+
+  const onNodeDragStop = (e: React.MouseEvent, node: Node) => {
+    console.log("======");
+    console.log(node);
+    console.log("======");
+  };
+
+  const onEdgeUpdateEnd = (e: any, edge: Edge, handleType: HandleType) => {
+    console.log("*****");
+    console.log(edge);
+    console.log("*****");
+  };
 
   return (
     <ReactFlow
@@ -45,6 +45,8 @@ const Main = () => {
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}
+      onNodeDragStop={onNodeDragStop}
+      onEdgeUpdateEnd={onEdgeUpdateEnd}
       fitView
     >
       <MiniMap />
