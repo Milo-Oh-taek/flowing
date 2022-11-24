@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 
 import { Layout } from "antd";
 
@@ -24,6 +24,7 @@ import ReactFlow, {
 } from "reactflow";
 
 import "reactflow/dist/style.css";
+import { NodeType } from "./Types";
 
 const { Header, Footer, Sider, Content } = Layout;
 
@@ -49,6 +50,7 @@ const initialData = {
 function App() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialData.nodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialData.edges);
+  const [clickedNode, setClickedNode] = useState<NodeType>();
 
   const onConnect = useCallback(
     (params: Edge<any> | Connection) => setEdges((eds) => addEdge(params, eds)),
@@ -65,6 +67,12 @@ function App() {
     console.log("*****");
     console.log(edge);
     console.log("*****");
+  };
+
+  const onNodeClick = (e: React.MouseEvent, node: NodeType) => {
+    console.log("clicked");
+    console.log(node);
+    setClickedNode(node);
   };
   return (
     <Layout className={styles.container}>
@@ -84,6 +92,7 @@ function App() {
             onConnect={onConnect}
             onNodeDragStop={onNodeDragStop}
             onEdgeUpdateEnd={onEdgeUpdateEnd}
+            onNodeClick={onNodeClick}
           >
             <MiniMap />
             <Controls />
@@ -91,7 +100,7 @@ function App() {
           </ReactFlow>
         </Content>
         <Sider className={styles.rightside} width={300}>
-          <Rightside />
+          <Rightside clickedNode={clickedNode} />
         </Sider>
       </Layout>
       <Footer>
