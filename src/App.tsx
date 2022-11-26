@@ -35,11 +35,20 @@ const initialData = {
       data: { label: "Hello" },
       position: { x: 0, y: 0 },
       type: "input",
+      style: {
+        width: "150px",
+        height: "41px",
+        backgroundColor: "#382d71",
+      },
     },
     {
       id: "2",
       data: { label: "World" },
       position: { x: 100, y: 100 },
+      style: {
+        width: "150px",
+        height: "41px",
+      },
     },
   ],
   edges: [
@@ -74,6 +83,11 @@ function App() {
     console.log(node);
     setClickedNode(node);
   };
+
+  const mutateNode = (targetNode: NodeType) => {
+    console.log("app mutating");
+    console.log(targetNode);
+  };
   return (
     <Layout className={styles.container}>
       <Header className={styles.header} style={{ backgroundColor: "white" }}>
@@ -100,7 +114,7 @@ function App() {
           </ReactFlow>
         </Content>
         <Sider className={styles.rightside} width={300}>
-          <Rightside clickedNode={clickedNode} />
+          <Rightside clickedNode={clickedNode} mutateNode={mutateNode} />
         </Sider>
       </Layout>
       <Footer>
