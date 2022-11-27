@@ -30,8 +30,17 @@ const Rightside = ({
     setNode(clickedNode);
   }, [clickedNode]);
 
-  const onChange = () => {
+  const onChange = (e: any) => {
     console.log("changed");
+    console.log(e);
+    const name = e.target.name;
+    const value = e.target.value;
+
+    setNode(
+      produce((draft) => {
+        draft!.data.label = value;
+      })
+    );
   };
 
   const onChangeColor = (e: any) => {
@@ -52,13 +61,16 @@ const Rightside = ({
   return (
     <>
       <SideCard title="Label">
-        <Input placeholder="Basic usage" value={clickedNode?.data.label} />
+        <Input
+          placeholder="Basic usage"
+          value={node?.data.label}
+          name="label"
+          onChange={onChange}
+        />
       </SideCard>
       <SideCard title="Width">
         <InputNumber
-          value={Number(
-            clickedNode?.style?.width?.toString().replace("px", "")
-          )}
+          value={Number(node?.style?.width?.toString().replace("px", ""))}
           name="width"
           min={1}
           max={500}
@@ -68,9 +80,7 @@ const Rightside = ({
       </SideCard>
       <SideCard title="Height">
         <InputNumber
-          value={Number(
-            clickedNode?.style?.height?.toString().replace("px", "")
-          )}
+          value={Number(node?.style?.height?.toString().replace("px", ""))}
           name="height"
           min={1}
           max={500}

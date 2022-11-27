@@ -10,6 +10,8 @@ import Leftside from "./ui/Leftside";
 import Rightside from "./ui/Rightside";
 import Main from "./ui/Main";
 
+import produce from "immer";
+
 import ReactFlow, {
   MiniMap,
   Controls,
@@ -87,7 +89,14 @@ function App() {
   const mutateNode = (targetNode: NodeType) => {
     console.log("app mutating");
     console.log(targetNode);
+    setNodes(
+      produce((draft) => {
+        const idx = draft.findIndex((n) => n.id == targetNode.id);
+        draft[idx] = targetNode;
+      })
+    );
   };
+
   return (
     <Layout className={styles.container}>
       <Header className={styles.header} style={{ backgroundColor: "white" }}>
