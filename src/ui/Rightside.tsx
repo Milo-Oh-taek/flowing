@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import SideCard from "../components/SideCard";
 
-import { Input, InputNumber, Badge, Space, Switch, Button } from "antd";
+import { Input, InputNumber, Badge, Space, Switch, Button, Card } from "antd";
 import { ClockCircleOutlined } from "@ant-design/icons";
-import { NodeType } from "../Types";
+import { NodeType, NodeDTOType } from "../Types";
 
 import styles from "./Rightside.module.css";
 
@@ -25,16 +25,41 @@ const Rightside = ({
   const [colorPicker, setColorPicker] = useState(false);
 
   const [node, setNode] = useState<NodeType>();
+  const [nodeDTO, setNodeDTO] = useState<NodeDTOType>();
 
   useEffect(() => {
-    setNode(clickedNode);
+    if (clickedNode) {
+      setNodeDTO({
+        id: clickedNode.id,
+        label: clickedNode.data.label,
+        width: clickedNode.style!.width
+          ? clickedNode.style!.width?.toString().replace("px", "")
+          : clickedNode.width?.toString().replace("px", ""),
+        height: clickedNode.style!.width
+          ? clickedNode.style!.height?.toString().replace("px", "")
+          : clickedNode.height?.toString().replace("px", ""),
+        background: clickedNode.style!.backgroundColor
+          ? clickedNode.style!.backgroundColor
+          : undefined,
+      });
+    }
   }, [clickedNode]);
 
-  const onChange = (e: any) => {
+  const onChange = (e: any, numName?: string) => {
     console.log("changed");
     console.log(e);
-    const name = e.target.name;
-    const value = e.target.value;
+    console.log(numName);
+
+    const name = numName ? numName : e.target.name;
+    const value = numName ? e.target.value : e;
+
+    if (numName) {
+      // setNode(
+      //   produce((draft) => {
+      //     draft!.style[name] = value;
+      //   })
+      // );
+    }
 
     setNode(
       produce((draft) => {
@@ -60,37 +85,37 @@ const Rightside = ({
 
   return (
     <>
-      <SideCard title="Label">
+      <Card title="Label">
         <Input
           placeholder="Basic usage"
-          value={node?.data.label}
+          value={nodeDTO?.label}
           name="label"
           onChange={onChange}
         />
-      </SideCard>
-      <SideCard title="Width">
+      </Card>
+      <Card title="Width">
         <InputNumber
-          value={Number(node?.style?.width?.toString().replace("px", ""))}
+          value={Number(nodeDTO?.width)}
           name="width"
           min={1}
           max={500}
-          onChange={onChange}
+          onChange={(e) => onChange(e, "width")}
           prefix="px"
         />
-      </SideCard>
-      <SideCard title="Height">
+      </Card>
+      <Card title="Height">
         <InputNumber
-          value={Number(node?.style?.height?.toString().replace("px", ""))}
+          value={Number(nodeDTO?.height)}
           name="height"
           min={1}
           max={500}
-          onChange={onChange}
+          onChange={(e) => onChange(e, "height")}
           prefix="px"
         />
-      </SideCard>
-      <SideCard title="Background">
+      </Card>
+      <Card title="Background">
         <Input
-          value={node?.style?.backgroundColor}
+          value={nodeDTO?.background?.toString()}
           onFocus={() => setColorPicker(true)}
         />
         <Switch
@@ -98,12 +123,9 @@ const Rightside = ({
           onChange={() => setColorPicker(!colorPicker)}
         />
         {colorPicker ? (
-          <ChromePicker
-            color={node?.style?.backgroundColor}
-            onChange={onChangeColor}
-          />
+          <ChromePicker color={nodeDTO?.background} onChange={onChangeColor} />
         ) : null}
-      </SideCard>
+      </Card>
       <Button onClick={mutateHandler}>Primary Button</Button>
     </>
   );

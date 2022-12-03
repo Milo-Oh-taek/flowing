@@ -1,3 +1,5 @@
+import { Color } from "react-color";
+
 export type XYPosition = {
   x: number;
   y: number;
@@ -45,4 +47,12 @@ export type NodeType<T = any> = {
   //     handleBounds?: NodeHandleBounds;
   //     isParent?: boolean;
   //   };
+};
+
+export type NodeDTOType = {
+  id: string;
+  label: string;
+  width: string | number | null | undefined;
+  height: string | number | null | undefined;
+  background: Color | undefined;
 };
