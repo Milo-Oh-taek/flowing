@@ -1,4 +1,10 @@
-import React, { useCallback, useState } from "react";
+import React, {
+  BaseSyntheticEvent,
+  CSSProperties,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 import { Layout } from "antd";
 
@@ -26,7 +32,7 @@ import ReactFlow, {
 } from "reactflow";
 
 import "reactflow/dist/style.css";
-import { NodeType } from "./Types";
+import { NodeDataType, NodeStyleType, NodeType } from "./Types";
 
 const { Header, Footer, Sider, Content } = Layout;
 
@@ -86,13 +92,31 @@ function App() {
     setClickedNode(node);
   };
 
-  const mutateNode = (targetNode: NodeType) => {
-    console.log("app mutating");
-    console.log(targetNode);
+  const mutateLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!clickedNode) return;
+    setClickedNode(
+      produce((draft) => {
+        draft!.data.label = e.target.value;
+      })
+    );
     setNodes(
       produce((draft) => {
-        const idx = draft.findIndex((n) => n.id == targetNode.id);
-        draft[idx] = targetNode;
+        draft.find((node) => node.id === clickedNode.id)!.data.label =
+          e.target.value;
+      })
+    );
+  };
+
+  const mutateStyle = (style: CSSProperties) => {
+    if (!style || !clickedNode) return;
+    setClickedNode(
+      produce((draft) => {
+        draft!.style = style;
+      })
+    );
+    setNodes(
+      produce((draft) => {
+        draft!.find((node) => node.id === clickedNode.id)!.style = style;
       })
     );
   };
@@ -123,7 +147,11 @@ function App() {
           </ReactFlow>
         </Content>
         <Sider className={styles.rightside} width={300}>
-          <Rightside clickedNode={clickedNode} mutateNode={mutateNode} />
+          <Rightside
+            clickedNode={clickedNode}
+            mutateLabel={mutateLabel}
+            mutateStyle={mutateStyle}
+          />
         </Sider>
       </Layout>
       <Footer>

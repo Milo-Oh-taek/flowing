@@ -49,10 +49,14 @@ export type NodeType<T = any> = {
   //   };
 };
 
-export type NodeDTOType = {
-  id: string;
+export type NodeDataType = {
+  [index: string]: string;
   label: string;
+};
+
+export type NodeStyleType = {
   width: string | number | null | undefined;
   height: string | number | null | undefined;
   background: Color | undefined;
+  [index: string]: any;
 };

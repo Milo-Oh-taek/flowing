@@ -1,86 +1,66 @@
-import React, { useEffect, useState } from "react";
+import React, { CSSProperties, useEffect, useState } from "react";
 import SideCard from "../components/SideCard";
 
 import { Input, InputNumber, Badge, Space, Switch, Button, Card } from "antd";
 import { ClockCircleOutlined } from "@ant-design/icons";
-import { NodeType, NodeDTOType } from "../Types";
+import { NodeType, NodeStyleType, NodeDataType } from "../Types";
 
 import styles from "./Rightside.module.css";
 
 import produce from "immer";
 
-import { ChromePicker } from "react-color";
+import { ChromePicker, ColorChangeHandler } from "react-color";
 
 const Rightside = ({
   clickedNode,
-  mutateNode,
+  mutateLabel,
+  mutateStyle,
 }: {
   clickedNode: NodeType | undefined;
-  mutateNode: (node: NodeType) => void;
+  mutateLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  mutateStyle: (style: CSSProperties) => void;
 }) => {
-  console.log("arrived");
-  console.log(clickedNode);
+  const [data, setData] = useState<NodeDataType>();
+  const [style, setStyle] = useState<CSSProperties>();
 
-  // const [color, setColor] = useState<string>();
   const [colorPicker, setColorPicker] = useState(false);
 
-  const [node, setNode] = useState<NodeType>();
-  const [nodeDTO, setNodeDTO] = useState<NodeDTOType>();
-
   useEffect(() => {
-    if (clickedNode) {
-      setNodeDTO({
-        id: clickedNode.id,
-        label: clickedNode.data.label,
-        width: clickedNode.style!.width
-          ? clickedNode.style!.width?.toString().replace("px", "")
-          : clickedNode.width?.toString().replace("px", ""),
-        height: clickedNode.style!.width
-          ? clickedNode.style!.height?.toString().replace("px", "")
-          : clickedNode.height?.toString().replace("px", ""),
-        background: clickedNode.style!.backgroundColor
-          ? clickedNode.style!.backgroundColor
-          : undefined,
-      });
-    }
+    if (!clickedNode) return;
+
+    setData(clickedNode.data);
+    setStyle(clickedNode.style);
   }, [clickedNode]);
 
-  const onChange = (e: any, numName?: string) => {
-    console.log("changed");
-    console.log(e);
-    console.log(numName);
+  useEffect(() => {
+    mutateStyle(style!);
+  }, [style]);
 
-    const name = numName ? numName : e.target.name;
-    const value = numName ? e.target.value : e;
+  const styleHandler = (
+    e: any,
+    extra?: ColorChangeHandler | null,
+    name?: "width" | "height"
+  ) => {
+    if (!style) return;
 
-    if (numName) {
-      // setNode(
-      //   produce((draft) => {
-      //     draft!.style[name] = value;
-      //   })
-      // );
+    //배경색 변경
+    if (e.hex) {
+      setStyle(
+        produce((draft) => {
+          draft!.backgroundColor = e.hex;
+        })
+      );
+      return;
     }
-
-    setNode(
-      produce((draft) => {
-        draft!.data.label = value;
-      })
-    );
-  };
-
-  const onChangeColor = (e: any) => {
-    console.log(e.hex);
-
-    setNode(
-      produce((draft) => {
-        draft!.style!.backgroundColor = e.hex;
-      })
-    );
-  };
-
-  const mutateHandler = () => {
-    if (!node) return;
-    mutateNode(node);
+    // width, height 변경
+    if (name) {
+      setStyle(
+        produce((draft) => {
+          draft![name] = e;
+        })
+      );
+      return;
+    }
   };
 
   return (
@@ -88,34 +68,38 @@ const Rightside = ({
       <Card title="Label">
         <Input
           placeholder="Basic usage"
-          value={nodeDTO?.label}
+          value={clickedNode?.data.label}
           name="label"
-          onChange={onChange}
+          onChange={mutateLabel}
         />
       </Card>
       <Card title="Width">
         <InputNumber
-          value={Number(nodeDTO?.width)}
+          value={Number(
+            clickedNode?.style!.width!.toString().replace("px", "")
+          )}
           name="width"
           min={1}
           max={500}
-          onChange={(e) => onChange(e, "width")}
+          onChange={(v) => styleHandler(v, null, "width")}
           prefix="px"
         />
       </Card>
       <Card title="Height">
         <InputNumber
-          value={Number(nodeDTO?.height)}
+          value={Number(
+            clickedNode?.style!.height?.toString().replace("px", "")
+          )}
           name="height"
           min={1}
           max={500}
-          onChange={(e) => onChange(e, "height")}
+          onChange={(v) => styleHandler(v, null, "height")}
           prefix="px"
         />
       </Card>
       <Card title="Background">
         <Input
-          value={nodeDTO?.background?.toString()}
+          value={clickedNode?.style!.backgroundColor?.toString()}
           onFocus={() => setColorPicker(true)}
         />
         <Switch
@@ -123,10 +107,12 @@ const Rightside = ({
           onChange={() => setColorPicker(!colorPicker)}
         />
         {colorPicker ? (
-          <ChromePicker color={nodeDTO?.background} onChange={onChangeColor} />
+          <ChromePicker
+            color={clickedNode?.style!.backgroundColor}
+            onChange={(v) => styleHandler(v)}
+          />
         ) : null}
       </Card>
-      <Button onClick={mutateHandler}>Primary Button</Button>
     </>
   );
 };
