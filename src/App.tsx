@@ -46,7 +46,9 @@ const initialData = {
       style: {
         width: "150px",
         height: "41px",
-        backgroundColor: "#382d71",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
       },
     },
     {
@@ -56,6 +58,9 @@ const initialData = {
       style: {
         width: "150px",
         height: "41px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
       },
     },
   ],
