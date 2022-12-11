@@ -40,7 +40,7 @@ const initialData = {
   nodes: [
     {
       id: "1",
-      data: { label: "Hello" },
+      data: { label: "Input" },
       position: { x: 0, y: 0 },
       type: "input",
       style: {
@@ -53,8 +53,21 @@ const initialData = {
     },
     {
       id: "2",
-      data: { label: "World" },
+      data: { label: "Default" },
       position: { x: 100, y: 100 },
+      style: {
+        width: "150px",
+        height: "41px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      },
+    },
+    {
+      id: "3",
+      data: { label: "Output" },
+      position: { x: 200, y: 200 },
+      type: "output",
       style: {
         width: "150px",
         height: "41px",
@@ -66,6 +79,7 @@ const initialData = {
   ],
   edges: [
     { id: "1-2", source: "1", target: "2", label: "to the", type: "step" },
+    { id: "2-3", source: "2", target: "3", label: "to the", type: "step" },
   ],
 };
 
@@ -126,6 +140,15 @@ function App() {
     );
   };
 
+  const addNode = (node: NodeType) => {
+    console.log("new!");
+    setNodes(
+      produce((draft) => {
+        draft!.push(node);
+      })
+    );
+  };
+
   return (
     <Layout className={styles.container}>
       <Header className={styles.header} style={{ backgroundColor: "white" }}>
@@ -133,7 +156,7 @@ function App() {
       </Header>
       <Layout>
         <Sider className={styles.leftside} width={300}>
-          <Leftside />
+          <Leftside addNode={addNode} idCnt={nodes.length} />
         </Sider>
         <Content>
           <ReactFlow

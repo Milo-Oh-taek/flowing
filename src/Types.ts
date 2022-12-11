@@ -41,6 +41,8 @@ export type NodeType<T = any> = {
   positionAbsolute?: XYPosition;
   ariaLabel?: string;
 
+  [index: string]: any;
+
   // only used internally
   //   [internalsSymbol]?: {
   //     z?: number;
