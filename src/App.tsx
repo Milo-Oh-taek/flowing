@@ -33,6 +33,7 @@ import ReactFlow, {
 
 import "reactflow/dist/style.css";
 import { NodeDataType, NodeStyleType, NodeType } from "./Types";
+import Foot from "./ui/Foot";
 
 const { Header, Footer, Sider, Content } = Layout;
 
@@ -183,7 +184,7 @@ function App() {
         </Sider>
       </Layout>
       <Footer>
-        <Footer />
+        <Foot />
       </Footer>
     </Layout>
   );
