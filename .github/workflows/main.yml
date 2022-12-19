@@ -20,11 +20,9 @@ jobs:
         run: yarn
 
       - name: Build
-        run: yarn build
+        run: CI=false yarn build
 
       - name: Deploy
-        uses: lbertenasco/s3-deploy@v1
-        with:
-          folder: build
-          bucket: ${{ secrets.S3_BUCKET }}
-          invalidation: / *
+        run: |
+          aws s3 sync ./build s3://${{ secrets.S3_BUCKET }}
+            
