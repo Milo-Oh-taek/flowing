@@ -175,13 +175,16 @@ function App() {
             <Background />
           </ReactFlow>
         </Content>
-        <Sider className={styles.rightside} width={300}>
-          <Rightside
-            clickedNode={clickedNode}
-            mutateLabel={mutateLabel}
-            mutateStyle={mutateStyle}
-          />
-        </Sider>
+        {clickedNode && (
+          <Sider className={styles.rightside} width={300}>
+            <Rightside
+              clickedNode={clickedNode}
+              mutateLabel={mutateLabel}
+              mutateStyle={mutateStyle}
+              resetSelect={() => setClickedNode(undefined)}
+            />
+          </Sider>
+        )}
       </Layout>
       <Footer>
         <Foot />
