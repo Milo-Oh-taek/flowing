@@ -150,6 +150,10 @@ function App() {
     );
   };
 
+  const deleteNode = () => {
+    console.log("clicked");
+  };
+
   return (
     <Layout className={styles.container}>
       <Header className={styles.header} style={{ backgroundColor: "white" }}>
@@ -181,6 +185,7 @@ function App() {
               clickedNode={clickedNode}
               mutateLabel={mutateLabel}
               mutateStyle={mutateStyle}
+              deleteNode={deleteNode}
               resetSelect={() => setClickedNode(undefined)}
             />
           </Sider>

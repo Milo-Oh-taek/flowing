@@ -16,11 +16,13 @@ const Rightside = ({
   mutateLabel,
   mutateStyle,
   resetSelect,
+  deleteNode,
 }: {
   clickedNode: NodeType | undefined;
   mutateLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
   mutateStyle: (style: CSSProperties) => void;
   resetSelect: () => void;
+  deleteNode: () => void;
 }) => {
   const [data, setData] = useState<NodeDataType>();
   const [style, setStyle] = useState<CSSProperties>();
@@ -118,6 +120,9 @@ const Rightside = ({
               />
             ) : null}
           </Card>
+          <Button danger className={styles.deleteButton} onClick={deleteNode}>
+            Delete
+          </Button>
           <div className={styles.iconDiv}>
             <DoubleRightOutlined
               className={styles.icon}
